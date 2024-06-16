@@ -7,42 +7,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>
+    <UseAppHost>false</UseAppHost>
+    <PublishTrimmed>true</PublishTrimmed>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
   
   <PropertyGroup>
     <PublishTrimmed>true</PublishTrimmed>
     <AssemblyName>csharp-wasm</AssemblyName>
   </PropertyGroup>
+
   <ItemGroup>
-    <NativeLibrary Include="ProxyWorld_component_type.o" />
-    <NativeLibrary Include="$(MSBuildProjectDirectory)/ProxyWorld_cabi_realloc.o" />
-    
+    <PackageReference Include="ByteCodeAlliance.Componentize.DotNet.Wasm.SDK" Version="0.1.0-preview00003" />
   </ItemGroup>
 
   <ItemGroup>
-    <RdXmlFile Include="rd.xml" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <CustomLinkerArg Include="-Wl,--export,_initialize" />
-    <CustomLinkerArg Include="-Wl,--no-entry" />
-    <CustomLinkerArg Include="-mexec-model=reactor" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.ILCompiler.LLVM" Version="9.0.0-*" />
-    <PackageReference Include="runtime.win-x64.Microsoft.DotNet.ILCompiler.LLVM" Version="9.0.0-*" />
+    <Wit Update="./wit/proxy.wit" World="proxy" />
   </ItemGroup>
 
-  <Target Name="CheckWasmSdks">
-    <Error Text="Emscripten not found, not compiling to WebAssembly. To enable WebAssembly compilation, install Emscripten and ensure the EMSDK environment variable points to the directory containing upstream/emscripten/emcc.bat"
-           Condition="'$(EMSDK)' == ''" />
-  </Target>
-  
-  <Target Name="CompileCabiRealloc" BeforeTargets="IlcCompile" DependsOnTargets="CheckWasmSdks" 
-          Inputs="$(MSBuildProjectDirectory)/ProxyWorld_cabi_realloc.c"
-          Outputs="$(MSBuildProjectDirectory)/ProxyWorld_cabi_realloc.o"
-          >
-    <Exec Command="emcc.bat &quot;$(MSBuildProjectDirectory)/ProxyWorld_cabi_realloc.c&quot; -c -o &quot;$(MSBuildProjectDirectory)/ProxyWorld_cabi_realloc.o&quot;"/>
-  </Target>
 </Project>
