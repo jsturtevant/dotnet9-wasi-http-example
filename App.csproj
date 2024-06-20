@@ -21,9 +21,9 @@
   <ItemGroup>
     <PackageReference Include="ByteCodeAlliance.Componentize.DotNet.Wasm.SDK" Version="0.1.0-preview00003" />
   </ItemGroup>
-
   <ItemGroup>
-    <Wit Update="./wit/proxy.wit" World="proxy" />
+    
+    <Wit Remove="**\*.wit"  />
+    <Wit Include="wit" World="proxy" /> 
   </ItemGroup>
-
 </Project>
